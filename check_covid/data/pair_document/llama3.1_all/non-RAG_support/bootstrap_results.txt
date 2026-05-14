@@ -1,0 +1,6 @@
+CSV: /Users/shakibaam/Waterloo CS/Semester 4/RAG_Project_Continue/Check_Covid/Check_Covid_Data/Experiment_Phase_2/Neutral/llama3.1_all/non-RAG_support/neutral_claims_support_filtered.csv
+n = 295
+bootstrap resamples = 2000
+
+YES: 83.4% (95% CI 79.0–87.5)
+NO : 16.6% (95% CI 12.5–21.0)

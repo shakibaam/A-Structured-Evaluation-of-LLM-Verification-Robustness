@@ -1,0 +1,6 @@
+CSV: /Users/shakibaam/Waterloo CS/Semester 4/RAG_Project_Continue/Check_Covid/Check_Covid_Data/Experiment_Phase_2/Neutral/generate_adversarial/DeepSeek-R1-Distill-Qwen-32B_all/RAG_support_adversarial/support_adversarial.csv
+n = 320
+bootstrap resamples = 2000
+
+YES: 78.7% (95% CI 74.1–83.1)
+NO : 21.3% (95% CI 16.9–25.9)
