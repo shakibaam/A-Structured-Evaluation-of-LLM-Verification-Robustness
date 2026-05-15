@@ -1,6 +1,0 @@
-CSV: /Users/shakibaam/Waterloo CS/Semester 4/RAG_Project_Continue/Check_Covid/Check_Covid_Data/Experiment_Phase_2/Neutral/generate_adversarial/phi4_all/RAG_support_adversarial/support_adversarial.csv
-n = 320
-bootstrap resamples = 2000
-
-YES: 78.8% (95% CI 74.1–83.4)
-NO : 21.2% (95% CI 16.6–25.9)

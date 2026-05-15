@@ -1,6 +1,0 @@
-CSV: /Users/shakibaam/Waterloo CS/Semester 4/RAG_Project_Continue/Check_Covid/Check_Covid_Data/Experiment_Phase_2/Neutral/GPT4.1_all/non_RAG_refute/neutral_claims_refute_filtered.csv
-n = 320
-bootstrap resamples = 2000
-
-YES: 11.9% (95% CI 8.4–15.6)
-NO : 88.1% (95% CI 84.4–91.6)

@@ -1,6 +1,0 @@
-CSV: /Users/shakibaam/Waterloo CS/Semester 4/RAG_Project_Continue/Check_Covid/Check_Covid_Data/Experiment_Phase_2/Neutral/DeepSeek-R1-Distill-Qwen-32B_all/RAG_support/neutral_claims_support_filtered.csv
-n = 295
-bootstrap resamples = 2000
-
-YES: 97.0% (95% CI 94.9–98.7)
-NO : 3.0% (95% CI 1.3–5.1)

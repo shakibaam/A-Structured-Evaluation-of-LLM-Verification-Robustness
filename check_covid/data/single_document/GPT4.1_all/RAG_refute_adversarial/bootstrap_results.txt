@@ -1,6 +1,0 @@
-CSV: /Users/shakibaam/Waterloo CS/Semester 4/RAG_Project_Continue/Check_Covid/Check_Covid_Data/Experiment_Phase_2/Neutral/generate_adversarial/GPT4.1_all/RAG_refute_adversarial/refute adversarial.csv
-n = 295
-bootstrap resamples = 2000
-
-YES: 16.2% (95% CI 12.2–20.7)
-NO : 83.8% (95% CI 79.3–87.8)
