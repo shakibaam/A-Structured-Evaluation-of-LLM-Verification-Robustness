@@ -1,6 +1,6 @@
 # A Structured Evaluation of LLM Verification Robustness
 
-This is the official GitHub repository for the paper **"When Evidence Disagrees: A Structured Evaluation of LLM Verification Robustness"**. It contains all experiment outputs under `check_covid/data` and `emergent/data`, one shared adversarial-generation script under `code/`, readable prompt exports under `prompts/`, and an Emergent human-evaluation sheet.
+This is the official GitHub repository for the paper **"When Evidence Disagrees: A Structured Evaluation of LLM Verification Robustness"**. It contains all experiment outputs under `check_covid/data` and `emergent/data`, one shared adversarial-generation script under `code/`, per-benchmark preprocessing / bootstrap / evaluation code under `check_covid/code/` and `emergent/code/`, readable prompt exports under `prompts/`, and an Emergent human-evaluation sheet.
 
 ---
 
@@ -12,6 +12,9 @@ This is the official GitHub repository for the paper **"When Evidence Disagrees:
 ├── code/
 │   └── generate_adversarial.py
 ├── check_covid/
+│   ├── code/
+│   │   ├── bootstrap.py
+│   │   └── preprocess.py
 │   └── data/
 │       ├── refuted_claims_filtered.csv
 │       ├── supported_claims_filtered.csv
@@ -35,6 +38,10 @@ This is the official GitHub repository for the paper **"When Evidence Disagrees:
 │               ├── helpful_second_original_support/
 │               └── helpful_second_original_refute/
 ├── emergent/
+│   ├── code/
+│   │   ├── bootstrap.py
+│   │   ├── evaluate_response.py
+│   │   └── preprocess.py
 │   ├── data/
 │   │   ├── for_unique_queries.csv
 │   │   ├── against_unique_queries.csv
@@ -56,6 +63,8 @@ This is the official GitHub repository for the paper **"When Evidence Disagrees:
 │   │           ├── False_helpful_first/
 │   │           └── False_helpful_second/
 │   └── human_evaluation/
+│       ├── compute_kappa.py
+│       ├── sample_human_eval.py
 │       └── emergent_human_eval_n50_seed42.csv
 └── prompts/
     ├── RAGNAROK_v1.txt
@@ -90,6 +99,23 @@ Set `OPENAI_API_KEY` in the environment (optional `.env`; never commit secrets).
 |-----------|-----------------|-----------------|
 | check_covid | `claim`, `label` (support/refute), `abstract` | `query`, `id`, `cord_id` |
 | emergent | `claimHeadline`, `articleStance` (for/against), `articleBody` | `claimId`, `articleId`, `claimTruthiness` |
+
+---
+
+## `check_covid/code/` — Check-COVID preprocessing and bootstrap
+
+| File | Purpose |
+|------|---------|
+| [`check_covid/code/preprocess.py`](check_covid/code/preprocess.py) | CSV manipulation (query injection, label splitting, sampling, query framing) and JSONL ingestion (OpenAI Batch / open-source vLLM / DeepSeek) for attaching model answers to condition CSVs. |
+| [`check_covid/code/bootstrap.py`](check_covid/code/bootstrap.py) | Per-condition YES/NO rate bootstrap (95% CI) over one `results.csv`. |
+
+Run the bootstrap script on any condition folder:
+
+```bash
+python check_covid/code/bootstrap.py \
+    --csv check_covid/data/single_document/GPT5/RAG_support/results.csv \
+    --out check_covid/data/single_document/GPT5/RAG_support/bootstrap_results.txt
+```
 
 ---
 
@@ -141,6 +167,46 @@ Each contains four order × polarity cells:
 
 ---
 
+## `emergent/code/` — Emergent preprocessing, evaluation, and human-eval tooling
+
+| File | Purpose |
+|------|---------|
+| [`emergent/code/preprocess.py`](emergent/code/preprocess.py) | CSV manipulation (sampling, claim deduplication, stance filtering, query injection) and JSONL ingestion (OpenAI Batch / open-source vLLM / DeepSeek wrappers) for turning the raw Emergent dump into the layout under `emergent/data/`. |
+| [`emergent/code/evaluate_response.py`](emergent/code/evaluate_response.py) | Accuracy helpers for condition CSVs: compare ``Response`` to gold labels (overall or grouped by ``claimTruthiness``), append CSVs, and silent accuracy functions for scripting. |
+| [`emergent/code/bootstrap.py`](emergent/code/bootstrap.py) | Per-condition classification accuracy bootstrap (overall + per ground-truth) over one `results.csv`. |
+
+Bootstrap one Emergent condition:
+
+```bash
+python emergent/code/bootstrap.py \
+    --csv emergent/data/single_document/GPT5/RAG_for/results.csv \
+    --out emergent/data/single_document/GPT5/RAG_for/bootstrap_accuracy.txt
+```
+
+---
+
+## `emergent/human_evaluation/` — human annotation tooling
+
+| File | Purpose |
+|------|---------|
+| [`emergent/human_evaluation/sample_human_eval.py`](emergent/human_evaluation/sample_human_eval.py) | Stratified random sampler that produces the human-evaluation template (and its blind sibling). |
+| [`emergent/human_evaluation/compute_kappa.py`](emergent/human_evaluation/compute_kappa.py) | Cohen's kappa, exact agreement, and contingency table for a filled human-evaluation CSV. |
+| `emergent_human_eval_n50_seed42.csv` | 50 randomly sampled examples (seed 42) for human annotation |
+
+Reproduce the human-evaluation sample (then score it):
+
+```bash
+python emergent/human_evaluation/sample_human_eval.py \
+    --single-doc-dir emergent/data/single_document/GPT4.1 \
+    --out-dir emergent/human_evaluation \
+    --n 50 --seed 42
+
+python emergent/human_evaluation/compute_kappa.py \
+    emergent/human_evaluation/emergent_human_eval_n50_seed42.csv
+```
+
+---
+
 ## `emergent/data/`
 
 ### Source data
@@ -184,17 +250,6 @@ Each contains four order × truthiness cells:
 | `True_helpful_second` | Second | True |
 | `False_helpful_first` | First | False |
 | `False_helpful_second` | Second | False |
-
----
-
-## `emergent/human_evaluation/`
-
-Blind human-evaluation export used alongside automated scoring:
-
-| File | Description |
-|------|-------------|
-| `emergent_human_eval_n50_seed42.csv` | 50 randomly sampled examples (seed 42) for human annotation |
-
 
 ---
 
