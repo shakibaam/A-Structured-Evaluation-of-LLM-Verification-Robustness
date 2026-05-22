@@ -2,6 +2,14 @@
 
 This is the official GitHub repository for the paper **"When Evidence Disagrees: A Structured Evaluation of LLM Verification Robustness"**. It contains all experiment outputs under `check_covid/data` and `emergent/data`, one shared adversarial-generation script under `code/`, per-benchmark preprocessing / bootstrap / evaluation code under `check_covid/code/` and `emergent/code/`, readable prompt exports under `prompts/`, and an Emergent human-evaluation sheet.
 
+Install dependencies from the repo root (Python 3.10+):
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Set `OPENAI_API_KEY` in the environment before running `code/generate_adversarial.py` (optional `.env`; never commit secrets).
+
 ---
 
 ## Top-level layout
@@ -9,6 +17,7 @@ This is the official GitHub repository for the paper **"When Evidence Disagrees:
 ```
 .
 ├── README.md
+├── requirements.txt
 ├── code/
 │   └── generate_adversarial.py
 ├── check_covid/
